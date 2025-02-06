@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, getUsers } = require('../controllers/userController');
+const { registerUser, loginUser, getUsers } = require('../controllers/userController'); // Ensure the file name matches
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();

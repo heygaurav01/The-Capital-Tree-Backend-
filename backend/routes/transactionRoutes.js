@@ -4,7 +4,10 @@ const { getTransactions, createTransaction } = require('../controllers/transacti
 
 const router = express.Router();
 
-router.get('/', authMiddleware, roleMiddleware(['admin']), getTransactions); // Admins can view all transactions
-router.post('/', authMiddleware, roleMiddleware(['user']), createTransaction); // Users can create transactions
+// Public Routes
+router.get('/', getTransactions);
+
+// Protected Routes
+router.post('/', authMiddleware, roleMiddleware(['admin']), createTransaction);
 
 module.exports = router;

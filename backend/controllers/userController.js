@@ -1,4 +1,3 @@
-//Making for Register and login API page
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -7,19 +6,22 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 // Register a User (Admin/User)
-exports.registerUser = async (req, res) => {
+const registerUser = async (req, res) => {
     const { name, email, password, role } = req.body;
-    try {
+    try { console.log("registerUser");  
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = await User.create({ name, email, password: hashedPassword, role });
+        const user = await User.create({ name, email, password: hashedPassword, role }); 
+        console.log("registerUser", user);
         res.status(201).json({ message: 'User registered successfully', user });
-    } catch (error) {
+
+    } catch (error) { console.log("registerUser", error);
         res.status(400).json({ error: error.message });
+        
     }
 };
 
 // Login User (Admin/User)
-exports.loginUser = async (req, res) => {
+const loginUser = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findOne({ where: { email } });
@@ -37,7 +39,7 @@ exports.loginUser = async (req, res) => {
 };
 
 // Get All Users (Admin Only)
-exports.getUsers = async (req, res) => {
+const getUsers = async (req, res) => {
     try {
         const users = await User.findAll();
         res.json(users);
@@ -46,17 +48,8 @@ exports.getUsers = async (req, res) => {
     }
 };
 
-const express = require('express');
-const { registerUser, loginUser, getUsers } = require('./userController'); // Ensure the file name matches
-const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
-
-const router = express.Router();
-
-// Public Routes
-router.post('/register', registerUser);
-router.post('/login', loginUser);
-
-// Protected Routes
-router.get('/', authMiddleware, roleMiddleware(['admin']), getUsers); // Only Admins can view all users
-
-module.exports = router;
+module.exports = {
+    registerUser,
+    loginUser,
+    getUsers
+};
