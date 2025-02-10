@@ -1,18 +1,27 @@
-// Transaction Model - Tracks user transactions
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
-const User = require('./User'); // Ensure the file name matches
-const Plan = require('./plan');
+const User = require('./User');
+const Plan = require('./Plan');
 
 const Transaction = sequelize.define('Transaction', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'id' } },
-    planId: { type: DataTypes.INTEGER, allowNull: false, references: { model: Plan, key: 'id' } },
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    userId: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false, 
+        references: { model: User, key: 'id' }
+    },
+    planId: { 
+        type: DataTypes.INTEGER, 
+        allowNull: false, 
+        references: { model: Plan, key: 'id' }
+    },
     amount: { type: DataTypes.FLOAT, allowNull: false },
     status: { type: DataTypes.ENUM('pending', 'completed'), defaultValue: 'pending' }
-}, { timestamps: true });
+}, {
+    timestamps: true
+});
 
-// Define associations
+// Define Associations
 User.hasMany(Transaction, { foreignKey: 'userId', onDelete: 'CASCADE' });
 Transaction.belongsTo(User, { foreignKey: 'userId' });
 
