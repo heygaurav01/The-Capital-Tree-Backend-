@@ -1,11 +1,15 @@
 const express = require('express');
+const { createPlan, getAllPlans, updatePlan, deletePlan } = require('../controllers/planController'); // ✅ Import updatePlan
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
-const { createPlan, getPlans } = require('../controllers/planController');
 
 const router = express.Router();
 
-router.post('/', authMiddleware, roleMiddleware(['admin']), createPlan); // Only Admins can create plans
+// Admin-only routes (Protect with authentication & admin role)
+router.post('/', authMiddleware, roleMiddleware(['admin']), createPlan);
+router.put('/:id', authMiddleware, roleMiddleware(['admin']), updatePlan);  // ✅ Fix: Ensure updatePlan is imported
+router.delete('/:id', authMiddleware, roleMiddleware(['admin']), deletePlan);
 
-router.get('/', authMiddleware, getPlans); // All users can view plans
+// Public route (Anyone can view plans)
+router.get('/', getAllPlans);
 
 module.exports = router;
