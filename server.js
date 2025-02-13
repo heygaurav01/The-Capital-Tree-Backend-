@@ -7,6 +7,13 @@ const userRoutes = require('./routes/userRoutes');
 const planRoutes = require('./routes/planRoutes');
 const transactionRoutes = require('./routes/transactionRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
+const marketRoutes = require('./routes/marketRoutes');
+const predictionRoutes = require('./routes/predictionRoutes');
+const blogRoutes = require('./routes/blogRoutes');
+const faqRoutes = require('./routes/faqRoutes');
+const feedbackRoutes = require('./routes/feedbackRoutes');
+const notificationRoutes = require("./routes/notificationRoutes");
+
 
 dotenv.config();
 
@@ -17,13 +24,23 @@ app.use(cors());
 // Register Routes
 app.use('/api/users', userRoutes);
 app.use('/api/plans', planRoutes);
-app.use('/api/transactions', transactionRoutes);  // Add Transaction Management API
+app.use('/api/transactions', transactionRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/market', marketRoutes);
+app.use('/api/prediction', predictionRoutes);
+app.use('/api/blogs', blogRoutes);
+app.use('/api/faqs', faqRoutes);
+app.use('/api/feedbacks', feedbackRoutes);
+app.use("/api/notifications", notificationRoutes);
+
+
 
 // Sync Database
-sequelize.sync({ alter: true })  
-    .then(() => console.log("Gaurav Database Synced Successfully"))
-    .catch(err => console.error(" Database Sync Error:", err));
+sequelize.sync({ alter: true })
+    .then(() => console.log("Database & tables created"))
+    .catch(err => console.log("Error: ", err));
 
 const PORT = process.env.PORT || 3307;
-app.listen(PORT, () => console.log(`🚀 Backend running on port ${PORT}`));
+app.listen(PORT, () => console.log(`The Capital Tree backend running on port ${PORT}`));
+
+module.exports = app; // Export the app for testing
