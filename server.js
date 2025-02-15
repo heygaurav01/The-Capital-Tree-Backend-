@@ -13,6 +13,8 @@ const blogRoutes = require('./routes/blogRoutes');
 const faqRoutes = require('./routes/faqRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const notificationRoutes = require("./routes/notificationRoutes");
+const TWILIO_SID = process.env.TWILIO_SID;
+
 
 
 dotenv.config();

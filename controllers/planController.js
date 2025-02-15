@@ -1,6 +1,6 @@
 const Plan = require('../models/Plan');
 
-// ✅ Create a new investment plan
+// Create a new investment plan
 exports.createPlan = async (req, res) => {
     try {
         const { name, description, price } = req.body;
@@ -14,7 +14,7 @@ exports.createPlan = async (req, res) => {
     }
 };
 
-// ✅ Get all investment plans
+//  Get all investment plans
 exports.getAllPlans = async (req, res) => {
     try {
         const plans = await Plan.findAll();
@@ -24,7 +24,7 @@ exports.getAllPlans = async (req, res) => {
     }
 };
 
-// ✅ Ensure `updatePlan` function exists
+//  Ensure `updatePlan` function exists
 exports.updatePlan = async (req, res) => {
     try {
         const { id } = req.params;
@@ -40,7 +40,7 @@ exports.updatePlan = async (req, res) => {
     }
 };
 
-// ✅ Delete an investment plan
+//  Delete an investment plan
 exports.deletePlan = async (req, res) => {
     try {
         const { id } = req.params;
