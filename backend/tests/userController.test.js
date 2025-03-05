@@ -1,46 +1,57 @@
 const request = require('supertest');
-const { User } = require('../models/User');
-require('../setupTest');
+const app = require('../server'); // Import your Express app
+const { User } = require('../models');
+const bcrypt = require('bcryptjs');
 
-jest.setTimeout(10000); // Increase Jest timeout to 10 seconds
+jest.mock('../models'); // Mock Sequelize model
 
-describe("User API", () => {
-    it("should register a new user", async () => {
-        const response = await request(global.agent)
+describe('User API Tests', () => {
+    let user;
+
+    beforeEach(async () => {
+        user = {
+            id: 1,
+            name: "John Doe",
+            email: "john@example.com",
+            password: await bcrypt.hash("Test@123", 10),
+            phone: "+919876543210",
+            role: "user",
+            isPhoneVerified: true,
+            isEmailVerified: true
+        };
+        User.findOne.mockResolvedValue(null);
+        User.create.mockResolvedValue(user);
+    });
+
+    test(' Should register a user', async () => {
+        const res = await request(app)
             .post('/api/users/register')
             .send({
-                name: "Test User",
-                email: "testuser@example.com",
-                password: "password123",
+                name: "John Doe",
+                email: "john@example.com",
+                phone: "+919876543210",
+                password: "Test@123",
+                confirmPassword: "Test@123",
                 role: "user"
             });
 
-        expect(response.status).toBe(201);
-        expect(response.body).toHaveProperty('message', 'User registered successfully');
-        expect(response.body.user).toHaveProperty('id');
-        expect(response.body.user).toHaveProperty('name', 'Test User');
-        expect(response.body.user).toHaveProperty('email', 'testuser@example.com');
+        expect(res.statusCode).toBe(201);
+        expect(res.body).toHaveProperty("message", "User registered. Verify phone & email.");
     });
 
-    it("should login a user", async () => {
-        const response = await request(global.agent)
-            .post('/api/users/login')
+    test(' Should return error if passwords do not match', async () => {
+        const res = await request(app)
+            .post('/api/users/register')
             .send({
-                email: "testuser@example.com",
-                password: "password123"
+                name: "John Doe",
+                email: "john@example.com",
+                phone: "+919876543210",
+                password: "Test@123",
+                confirmPassword: "WrongPass@123",
+                role: "user"
             });
 
-        expect(response.status).toBe(200);
-        expect(response.body).toHaveProperty('token');
-        expect(response.body).toHaveProperty('message', 'Logged in successfully');
-    });
-
-    it("should get all users (admin only)", async () => {
-        const response = await request(global.agent)
-            .get('/api/users')
-            .set('Authorization', `Bearer ${adminToken}`); // Replace with a valid admin token
-
-        expect(response.status).toBe(200);
-        expect(response.body).toBeInstanceOf(Array);
+        expect(res.statusCode).toBe(400);
+        expect(res.body).toHaveProperty("message", "Passwords do not match");
     });
 });

@@ -1,7 +1,7 @@
 const express = require('express');
-const { 
-    registerUser, verifyPhone, verifyEmail, loginUser, getUsers 
-} = require('../controllers/userController'); 
+const {
+    registerUser, verifyPhone, verifyEmail, loginUser, getUsers, forgotPassword, resetPassword
+} = require('../controllers/userController');
 
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
 
@@ -12,8 +12,10 @@ router.post('/register', registerUser);
 router.post('/verify-phone', verifyPhone);
 router.get('/verify-email/:token', verifyEmail);
 router.post('/login', loginUser);
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 //  Protected Routes (Admin Only)
-router.get('/', authMiddleware, roleMiddleware(['admin']), getUsers); 
+router.get('/', authMiddleware, roleMiddleware(['admin']), getUsers);
 
 module.exports = router;

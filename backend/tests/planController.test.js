@@ -1,7 +1,23 @@
 const request = require('supertest');
-const app = require('../server');
+const { Plan } = require('../models');
+require('./setupTest');
+
+jest.mock('../models');
 
 describe("Plan API", () => {
+    const adminToken = 'your_admin_token'; // Replace with a valid admin token
+
+    beforeEach(() => {
+        Plan.findAll.mockResolvedValue([
+            { id: 1, name: "Basic Plan", description: "Basic plan description", price: 10.0 }
+        ]);
+        Plan.create.mockResolvedValue({
+            id: 2, name: "Premium Plan", description: "Premium plan description", price: 20.0
+        });
+        Plan.update.mockResolvedValue([1]);
+        Plan.destroy.mockResolvedValue(1);
+    });
+
     it("should create a new plan (admin only)", async () => {
         const response = await request(app)
             .post('/api/plans')
@@ -41,7 +57,7 @@ describe("Plan API", () => {
     });
 
     it("should delete a plan (admin only)", async () => {
-        const response = await request(app)
+        const response = await request(global.agent)
             .delete('/api/plans/1') // Replace with a valid plan ID
             .set('Authorization', `Bearer ${adminToken}`); // Replace with a valid admin token
 
