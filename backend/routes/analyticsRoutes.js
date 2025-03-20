@@ -4,10 +4,10 @@ const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware
 
 const router = express.Router();
 
-//  Dashboard API (Admin Only)
+// Admin-Only Routes
 router.get('/dashboard', authMiddleware, roleMiddleware(['admin']), getDashboardStats);
 
-//  Tracking API (For tracking user behavior)
+// Public Routes
 router.post('/track', trackUserActivity);
 
 module.exports = router;

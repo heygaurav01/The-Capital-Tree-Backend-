@@ -1,4 +1,4 @@
-const admin = require("../config/firebaseConfig");
+//const admin = require("../config/firebaseConfig");
 const Notification = require("../models/Notification");
 const User = require("../models/User"); // Assuming User Model exists
 

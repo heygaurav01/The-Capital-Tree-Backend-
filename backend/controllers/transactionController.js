@@ -6,24 +6,24 @@ const Plan = require('../models/Plan');
 exports.createTransaction = async (req, res) => {
     try {
         const { userId, planId, amount, status } = req.body;
-
+console.log(req.body);
         // Validate request data
         if (!userId || !planId || !amount) {
             return res.status(400).json({ message: "User ID, Plan ID, and amount are required." });
         }
-
+console.log(userId, planId, amount, status);
         // Check if user exists
         const user = await User.findByPk(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
-
+console.log(user);
         // Check if plan exists
         const plan = await Plan.findByPk(planId);
         if (!plan) return res.status(404).json({ message: "Plan not found" });
-
+console.log(plan);
         // Create transaction
         const transaction = await Transaction.create({ userId, planId, amount, status });
         res.status(201).json({ message: "Transaction recorded successfully", transaction });
-    } catch (error) {
+    } catch (error) {console.log(error);
         res.status(500).json({ error: error.message });
     }
 };

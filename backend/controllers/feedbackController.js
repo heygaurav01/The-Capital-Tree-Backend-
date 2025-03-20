@@ -4,15 +4,15 @@ const { User, Feedback } = require('../models'); // Ensure Users model is used f
 const submitFeedback = async (req, res) => {
     try {
         const { rating, comment } = req.body;
-        const userId = req.user.userId; // Extracted from JWT Token
+        const userId = req.user.id; // Extract userId from authenticated user
 
-        if (!rating || !comment) {
-            return res.status(400).json({ message: "Rating and comment are required." });
-        }
+        const feedback = await Feedback.create({
+            userId,
+            rating,
+            comment
+        });
 
-        const feedback = await Feedback.create({ userId, rating, comment });
-
-        res.status(201).json({ message: "Feedback submitted successfully", feedback });
+        res.status(201).json({ message: 'Feedback submitted successfully', feedback });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -21,7 +21,7 @@ const submitFeedback = async (req, res) => {
 //  Get All Feedbacks (Admin Only)
 const getAllFeedbacks = async (req, res) => {
     try {
-        const feedbacks = await Feedback.findAll({ include: { model: User, attributes: ['name', 'email'] } });
+        const feedbacks = await Feedback.findAll();
         res.json(feedbacks);
     } catch (error) {
         res.status(500).json({ error: error.message });

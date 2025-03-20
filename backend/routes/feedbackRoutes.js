@@ -4,10 +4,10 @@ const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware
 
 const router = express.Router();
 
-//  Users can submit feedback
+// Public Routes
 router.post('/', authMiddleware, submitFeedback);
 
-//  Admins can view all feedback
+// Admin-Only Routes
 router.get('/', authMiddleware, roleMiddleware(['admin']), getAllFeedbacks);
 
 module.exports = router;

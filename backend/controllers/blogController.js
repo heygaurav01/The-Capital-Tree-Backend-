@@ -1,6 +1,6 @@
 const Blog = require('../models/Blog');
 
-// ✅ Create Blog Post
+//  Create Blog Post
 exports.createBlog = async (req, res) => {
     try {
         const { title, content, author } = req.body;
@@ -11,7 +11,7 @@ exports.createBlog = async (req, res) => {
     }
 };
 
-// ✅ Get All Blogs
+// Get All Blogs
 exports.getBlogs = async (req, res) => {
     try {
         const blogs = await Blog.findAll();

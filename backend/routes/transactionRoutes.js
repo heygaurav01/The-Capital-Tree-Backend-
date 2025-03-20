@@ -17,3 +17,4 @@ router.get('/user/:userId', authMiddleware, getUserTransactions);
 router.get('/:id', authMiddleware, roleMiddleware(['admin']), getTransactionById);
 
 module.exports = router;
+

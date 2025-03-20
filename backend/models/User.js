@@ -10,24 +10,22 @@ const User = sequelize.define(
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: { name: 'unique_email', msg: 'Email must be unique' },
-            validate: {
-                 isEmail: {
-                   msg: 'Invalid email format'  // Add email validation
-                 }
-               }
+            unique: true
         },
         phone: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: { name: 'unique_phone', msg: 'Phone number must be unique' },
-            validate: {
-                 isNumeric: {
-                   msg: 'Phone number must contain only numbers'  // Add phone number validation
-                 }
-               }
+            unique: true
         },
         password: { type: DataTypes.STRING, allowNull: false },
+        role: { 
+            type: DataTypes.STRING, 
+            allowNull: false, 
+            defaultValue: 'user',
+            set(value) {
+                this.setDataValue('role', value.toLowerCase());
+            }
+        },
         isPhoneVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
         isEmailVerified: { type: DataTypes.BOOLEAN, defaultValue: false },
         otpCode: { type: DataTypes.STRING, allowNull: true },
@@ -37,17 +35,7 @@ const User = sequelize.define(
         passwordResetExpires: { type: DataTypes.DATE, allowNull: true }
     },
     {
-        timestamps: true,
-        indexes: [
-            {
-                unique: true,
-                fields: ['email']
-            },
-            {
-                unique: true,
-                fields: ['phone']
-            }
-        ]
+        timestamps: true
     }
 );
 

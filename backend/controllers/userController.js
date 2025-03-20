@@ -13,7 +13,7 @@ dotenv.config();
 // Register User (No Role)
 const registerUser = async (req, res) => {
     try {
-        const { name, email, phone, password, confirmPassword } = req.body;
+        const { name, email, phone, password, confirmPassword, role } = req.body;
 
         if (!name) return res.status(400).json({ message: "Name is required." });
         if (!confirmPassword) return res.status(400).json({ message: "Confirm password is required." });
@@ -22,19 +22,16 @@ const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const otp = Math.floor(100000 + Math.random() * 900000);
         const emailToken = crypto.randomBytes(32).toString('hex');
-        console.log('emailToken', emailToken);
 
         const user = await User.create({
-            name, email, phone, password: hashedPassword,
+            name, email, phone, password: hashedPassword, role,
             otpCode: otp, otpExpires: new Date(Date.now() + 300000),
             emailVerificationToken: emailToken
-            
-        });console.log(user);
+        });
 
         await sendOTP(phone, otp);
         await sendVerificationEmail(email, emailToken);
-console.log(user
-    );
+
         res.status(201).json({ message: 'User registered. Verify phone & email.' });
     } catch (error) {
         console.error(error); // Log the full error object
@@ -87,7 +84,12 @@ const loginUser = async (req, res) => {
         if (!user.isPhoneVerified) return res.status(400).json({ message: 'Phone not verified' });
         if (!user.isEmailVerified) return res.status(400).json({ message: 'Email not verified' });
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        // Include the role in the JWT payload
+        const token = jwt.sign(
+            { userId: user.id, role: user.role }, // Add role here
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
 
         res.json({ token, message: "Logged in successfully" });
     } catch (error) {
@@ -117,21 +119,18 @@ console.log(user);
 
 //  Reset Password
 const resetPassword = async (req, res) => {
-    try {console.log(req.body);
+    try {
         const { token, newPassword } = req.body;
-        console.log(token
-        );
+        console.log(token   ,newPassword);
         const user = await User.findOne({ where: { passwordResetToken: token, passwordResetExpires: { [Op.gt]: new Date() } } });
-
+console.log(user);
         if (!user) return res.status(400).json({ message: "Invalid or expired reset token" });
 
         const hashedPassword = await bcrypt.hash(newPassword, 10);
-        console.log(hashed
-        );
         await user.update({ password: hashedPassword, passwordResetToken: null, passwordResetExpires: null });
-
+console.log(user);
         res.json({ message: "Password reset successfully" });
-    } catch (error) {console.log(error);
+    } catch (error) {console.log(err);
         res.status(500).json({ error: error.message });
     }
 };
@@ -139,6 +138,7 @@ const resetPassword = async (req, res) => {
 // Get All Users (Admin Only)
 const getUsers = async (req, res) => {
     try {
+        console.log('getUsers called by:', req.user);
         const users = await User.findAll();
         res.json(users);
     } catch (error) {
