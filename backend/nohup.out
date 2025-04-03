@@ -1,0 +1,71 @@
+node:internal/modules/cjs/loader:1252
+  throw err;
+  ^
+
+Error: Cannot find module 'C:\Users\Gaurav Sharma\The-Capital-Tree-Backend-\backend\app.js'
+    at Function._resolveFilename (node:internal/modules/cjs/loader:1249:15)
+    at Function._load (node:internal/modules/cjs/loader:1075:27)
+    at TracingChannel.traceSync (node:diagnostics_channel:322:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:219:24)
+    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:170:5)
+    at node:internal/main/run_main_module:36:49 {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: []
+}
+
+Node.js v22.12.0
+
+> backend@1.0.0 dev
+> nodemon server.js
+
+[33m[nodemon] 3.1.9[39m
+[33m[nodemon] to restart at any time, enter `rs`[39m
+[33m[nodemon] watching path(s): server.js[39m
+[33m[nodemon] watching extensions: js,json[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+node:events:502
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: EBADF: bad file descriptor, read
+Emitted 'error' event on ReadStream instance at:
+    at emitErrorNT (node:internal/streams/destroy:170:8)
+    at errorOrDestroy (node:internal/streams/destroy:239:7)
+    at node:internal/fs/streams:272:9
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:671:5) {
+  errno: -4083,
+  code: 'EBADF',
+  syscall: 'read'
+}
+
+Node.js v22.12.0
+ALPHA_VANTAGE_API_KEY: XS5DEVAR24EWUTZU
+DB_NAME: capital_tree_db
+DB_USER: root
+DB_PASSWORD: Gauravs12@
+DB_HOST: localhost
+ALPHA_VANTAGE_API_KEY: XS5DEVAR24EWUTZU
+The Capital Tree backend running on port 3308
+Executing (default): SELECT 1+1 AS result
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Users' AND TABLE_SCHEMA = 'capital_tree_db'
+MySQL Connected
+Executing (default): SHOW INDEX FROM `Users`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Plans' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Plans`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Transactions' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Transactions`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'AnalyticsLogs' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `AnalyticsLogs`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'MarketData' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `MarketData`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Predictions' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Predictions`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Blogs' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Blogs`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'FAQs' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `FAQs`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Feedbacks' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Feedbacks`
+Executing (default): SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE' AND TABLE_NAME = 'Notifications' AND TABLE_SCHEMA = 'capital_tree_db'
+Executing (default): SHOW INDEX FROM `Notifications`
+Database & tables created

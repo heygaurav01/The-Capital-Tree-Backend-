@@ -1,4 +1,4 @@
-const Plan = require('../models/Plan');
+const Plan = require('../models/plan');
 
 // Create a new investment plan
 exports.createPlan = async (req, res) => {

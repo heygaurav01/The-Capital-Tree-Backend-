@@ -1,15 +1,34 @@
 const express = require('express');
-const { processPayment, paymentCallback } = require('../controllers/paymentController');
-const { generateQRCode } = require('../controllers/qrCodeController');
+const PaymentController = require('../controllers/paymentController');
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// Payment Processing
-router.post('/process', authMiddleware, processPayment);
-router.get('/callback', paymentCallback);
+// Customer routes
+router.post('/initiate', authMiddleware, PaymentController.initiatePayment);
+router.get('/status/:transactionId', authMiddleware, PaymentController.checkPaymentStatus);
 
-// QR Code Generation
-router.post('/generate-qr', authMiddleware, generateQRCode);
+// Admin routes
+router.get('/admin/all', 
+    authMiddleware, 
+    roleMiddleware(['admin']), 
+    PaymentController.getAllTransactions
+);
+
+router.get('/admin/:transactionId', 
+    authMiddleware, 
+    roleMiddleware(['admin']), 
+    PaymentController.getTransactionDetails
+);
+
+router.post('/admin/refund/:transactionId', 
+    authMiddleware, 
+    roleMiddleware(['admin']), 
+    PaymentController.processRefund
+);
+
+// Public routes
+router.post('/webhook', PaymentController.handleWebhook);
+router.get('/callback', PaymentController.paymentCallback);
 
 module.exports = router;

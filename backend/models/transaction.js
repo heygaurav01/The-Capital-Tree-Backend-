@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 const User = require('./User');
-const Plan = require('./Plan');
+const Plan = require('./plan');
 
 const Transaction = sequelize.define('Transaction', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },

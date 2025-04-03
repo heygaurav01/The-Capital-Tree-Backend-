@@ -1,6 +1,6 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
-const Plan = require('../models/Plan');
+const Plan = require('../models/plan');
 
 //  Create a new transaction
 exports.createTransaction = async (req, res) => {
