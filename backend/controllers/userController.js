@@ -7,11 +7,13 @@ const { sendVerificationEmail } = require('../config/mailer');
 const crypto = require('crypto');
 const { Op } = require('sequelize');
 const dotenv = require('dotenv');
+const sequelize = require('../config/db'); // Import Sequelize instance
 
 dotenv.config();
 
 // Register User (No Role)
 const registerUser = async (req, res) => {
+    const transaction = await sequelize.transaction(); // Start a transaction
     try {
         const { name, email, phone, password, confirmPassword, role } = req.body;
 
@@ -27,13 +29,15 @@ const registerUser = async (req, res) => {
             name, email, phone, password: hashedPassword, role,
             otpCode: otp, otpExpires: new Date(Date.now() + 300000),
             emailVerificationToken: emailToken
-        });
+        }, { transaction }); // Pass the transaction
 
-        await sendOTP(phone, otp);
-        await sendVerificationEmail(email, emailToken);
+        await sendOTP(phone, otp); // Send OTP
+        await sendVerificationEmail(email, emailToken); // Send email verification
 
+        await transaction.commit(); // Commit the transaction
         res.status(201).json({ message: 'User registered. Verify phone & email.' });
     } catch (error) {
+        await transaction.rollback(); // Rollback the transaction on error
         console.error(error); // Log the full error object
         res.status(400).json({ error: error.message, details: error.errors });
     }

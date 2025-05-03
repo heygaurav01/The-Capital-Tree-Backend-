@@ -8,7 +8,7 @@ const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware
 const router = express.Router();
 
 // Public Routes
-router.post('/register', registerUser);
+router.post('/register', registerUser); 
 router.post('/verify-phone', verifyPhone);
 router.get('/verify-email/:token', verifyEmail);
 router.post('/login', loginUser);

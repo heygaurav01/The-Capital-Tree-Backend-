@@ -1,6 +1,6 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
-const Plan = require('../models/Plan');
+const Plan = require('../models/plan');
 const AnalyticsLog = require('../models/AnalyticsLog');
 
 // Dashboard API: Provides investment, revenue, and activity data
