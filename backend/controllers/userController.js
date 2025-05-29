@@ -150,6 +150,30 @@ const getUsers = async (req, res) => {
     }
 };
 
+// Resend OTP for phone verification
+const resendOTP = async (req, res) => {
+    try {
+        const { phone } = req.body;
+        const user = await User.findOne({ where: { phone } });
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+        if (user.isPhoneVerified) return res.status(400).json({ message: "Phone already verified" });
+
+        // Generate new OTP and expiry
+        const otp = Math.floor(100000 + Math.random() * 900000);
+        await user.update({
+            otpCode: otp,
+            otpExpires: new Date(Date.now() + 300000) // 5 minutes from now
+        });
+
+        await sendOTP(phone, otp);
+
+        res.json({ message: "OTP resent successfully" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     registerUser,
     verifyPhone,
@@ -157,5 +181,6 @@ module.exports = {
     loginUser,
     forgotPassword,
     resetPassword,
-    getUsers
+    getUsers,
+    resendOTP
 };

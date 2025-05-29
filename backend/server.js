@@ -14,6 +14,7 @@ const faqRoutes = require('./routes/faqRoutes');
 const feedbackRoutes = require('./routes/feedbackRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const withdrawalRoutes = require('./routes/withdrawalRoutes');
 
 // Check environment variables immediately after loading dotenv
 console.log("DB_NAME:", process.env.DB_NAME);
@@ -38,6 +39,7 @@ app.use('/api/faqs', faqRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/withdrawals', withdrawalRoutes);
 
 // Sync Database
 sequelize.sync({ force: false })  // Use force: true cautiously

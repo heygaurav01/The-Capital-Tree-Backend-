@@ -11,13 +11,16 @@ exports.sendNotification = async (req, res) => {
             return res.status(400).json({ error: "Device token is required" });
         }
 
-        // Send notification via Firebase
+        // Prepare notification payload
         const payload = {
-            notification: { title, body: message },
-            token: deviceToken,
+            notification: { title, body: message }
         };
 
-        await admin.messaging().send(payload);
+        // Send notification via Firebase
+        await admin.messaging().send({
+            token: deviceToken,
+            ...payload
+        });
 
         // Store notification in the database
         await Notification.create({ userId, title, message, status: "sent" });

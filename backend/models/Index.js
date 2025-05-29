@@ -10,12 +10,7 @@ console.log("Plan model:", Plan);
 
 module.exports = {
     User,
-<<<<<<< HEAD:backend/models/index.js
     Plan,
     Transaction,
     // other models...
 };
-=======
-    Feedback
-};
->>>>>>> 5cf0b6f92e373835e072408f91f16af0d32ab5cf:backend/models/Index.js
