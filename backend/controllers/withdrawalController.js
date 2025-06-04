@@ -11,6 +11,11 @@ exports.requestWithdrawal = async (req, res) => {
             return res.status(400).json({ message: "Amount and bank details are required." });
         }
 
+        const user = await User.findByPk(req.user.id);
+        if (!user.kycCompleted) {
+            return res.status(403).json({ message: "Complete KYC to request withdrawal." });
+        }
+
         const withdrawal = await Withdrawal.create({ userId, amount, bankDetails });
         res.status(201).json({ message: "Withdrawal request submitted", withdrawal });
     } catch (error) {

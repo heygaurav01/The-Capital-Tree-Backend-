@@ -16,7 +16,8 @@ const Transaction = sequelize.define('Transaction', {
         references: { model: Plan, key: 'id' }
     },
     amount: { type: DataTypes.FLOAT, allowNull: false },
-    status: { type: DataTypes.ENUM('pending', 'completed'), defaultValue: 'pending' }
+    status: { type: DataTypes.ENUM('pending', 'completed'), defaultValue: 'pending' },
+    profit: { type: DataTypes.FLOAT, allowNull: true, defaultValue: 0 }
 }, {
     timestamps: true
 });

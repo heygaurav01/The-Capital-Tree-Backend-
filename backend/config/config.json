@@ -1,0 +1,9 @@
+{
+  "development": {
+    "username": "root",
+    "password": "Gauravs12@",
+    "database": "capital_tree_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}

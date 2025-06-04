@@ -42,7 +42,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/withdrawals', withdrawalRoutes);
 
 // Sync Database
-sequelize.sync({ force: false })  // Use force: true cautiously
+sequelize.sync({ force: false })  // WARNING: This will DROP and recreate all tables!
     .then(() => console.log("Database & tables created"))
     .catch(err => console.error("Error during database sync: ", err));
 

@@ -1,5 +1,6 @@
 // usercontroller.js
 const User = require('../models/User');
+const Transaction = require('../models/Transaction');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { sendOTP } = require('../config/twilio');
@@ -79,27 +80,28 @@ console.log(user);
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
+        console.log(req.body);
         const user = await User.findOne({ where: { email } });
-
+console.log(user);
         if (!user || !(await bcrypt.compare(password, user.password))) {
             return res.status(400).json({ message: 'Invalid credentials' });
-        }
+        }console.log(user);
 
         if (!user.isPhoneVerified) return res.status(400).json({ message: 'Phone not verified' });
         if (!user.isEmailVerified) return res.status(400).json({ message: 'Email not verified' });
-
+console.log('User role:', user.role);
         // Include the role in the JWT payload
         const token = jwt.sign(
             { userId: user.id, role: user.role }, // Add role here
             process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
-
+console.log('Generated token:', token);
         res.json({ token, message: "Logged in successfully" });
-    } catch (error) {
+    } catch (error) { console.error(error);
         res.status(500).json({ error: error.message });
     }
-};
+};console.log('loginUser function loaded');
 
 //  Forgot Password
 const forgotPassword = async (req, res) => {
@@ -174,6 +176,90 @@ const resendOTP = async (req, res) => {
     }
 };
 
+// Get own profile
+const getProfile = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id, {
+            attributes: { exclude: ['password', 'otpCode', 'otpExpires', 'emailVerificationToken', 'passwordResetToken', 'passwordResetExpires'] }
+        });
+        if (!user) return res.status(404).json({ message: "User not found" });
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Update profile & KYC
+const updateProfile = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        const {
+            firstName, lastName, dob, address, city, country, citizenship, taxIdNumber,
+            aadhaarNumber, panNumber, aadhaarDocUrl, panDocUrl
+        } = req.body;
+
+        // Check if all KYC fields are filled
+        const kycCompleted = !!(aadhaarNumber && panNumber && aadhaarDocUrl && panDocUrl);
+
+        await user.update({
+            firstName, lastName, dob, address, city, country, citizenship, taxIdNumber,
+            aadhaarNumber, panNumber, aadhaarDocUrl, panDocUrl, kycCompleted
+        });
+
+        res.json({ message: "Profile updated successfully", user });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// Upload KYC Documents
+const uploadKycDocs = async (req, res) => {
+    try {
+        const user = await User.findByPk(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // Multer saves files in req.files
+        const aadhaarDocUrl = req.files.aadhaarDoc ? req.files.aadhaarDoc[0].path : undefined;
+        const panDocUrl = req.files.panDoc ? req.files.panDoc[0].path : undefined;
+
+        await user.update({ aadhaarDocUrl, panDocUrl });
+
+        res.json({ message: "KYC documents uploaded", aadhaarDocUrl, panDocUrl });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 1. API: Get user's total investment (all completed investments)
+const getUserTotalInvestment = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        // Sum all completed transactions for this user
+        const totalInvestment = await Transaction.sum('amount', {
+            where: { userId, status: 'completed' }
+        });
+        res.json({ totalInvestment: totalInvestment || 0 });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// 2. API: Get user's total profit/loss (sum of profit field)
+const getUserTotalProfitLoss = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        // Sum profit for all completed transactions for this user
+        const totalProfit = await Transaction.sum('profit', {
+            where: { userId, status: 'completed' }
+        });
+        res.json({ totalProfitOrLoss: totalProfit || 0 });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
 module.exports = {
     registerUser,
     verifyPhone,
@@ -182,5 +268,10 @@ module.exports = {
     forgotPassword,
     resetPassword,
     getUsers,
-    resendOTP
+    resendOTP,
+    getProfile,
+    updateProfile,
+    uploadKycDocs,
+    getUserTotalInvestment,     
+    getUserTotalProfitLoss       
 };
