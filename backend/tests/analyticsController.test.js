@@ -14,6 +14,8 @@ describe("Analytics API", () => {
         expect(response.body).toHaveProperty('totalRevenue');
         expect(response.body).toHaveProperty('userActivity');
     });
+
+    it("should return 401 for unauthorized access to investment data", async () => {
         const response = await request(global.agent).get('/api/analytics/investments');
 
         expect(response.status).toBe(401);

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>The Capital Tree</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+        h1 { color: #2ecc71; }
+        .status { 
+            padding: 20px; 
+            margin: 20px auto; 
+            width: 50%;
+            border-radius: 5px;
+        }
+        .success { background: #2ecc71; color: white; }
+        .info { background: #3498db; color: white; }
+    </style>
+</head>
+<body>
+    <h1>The Capital Tree</h1>
+    <div class="status success">CI/CD Test Successful!</div>
+    <div class="status info">Server Time: <span id="time"></span></div>
+    
+    <script>
+        document.getElementById("time").textContent = new Date().toLocaleString();
+    </script>
+</body>
+</html>

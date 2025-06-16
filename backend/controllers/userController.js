@@ -275,3 +275,4 @@ module.exports = {
     getUserTotalInvestment,     
     getUserTotalProfitLoss       
 };
+

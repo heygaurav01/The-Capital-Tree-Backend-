@@ -1,11 +1,12 @@
 const request = require('supertest');
+const app = require('../server');
 const { Plan } = require('../models');
 require('./setupTest');
 
 jest.mock('../models');
 
 describe("Plan API", () => {
-    const adminToken = 'your_admin_token'; // Replace with a valid admin token
+    const adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEwLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3NDk3OTE0OTYsImV4cCI6MTc0OTc5NTA5Nn0.sKKGhinrJrV_qJRvp-Xpr8LMVVARMef06IYSTQo4r-o'; // Replace with a valid admin token
 
     beforeEach(() => {
         Plan.findAll.mockResolvedValue([

@@ -1,9 +1,9 @@
 const request = require('supertest');
-const app = require('../server'); // Import your Express app
+const app = require('../server');
 const { User } = require('../models');
 const bcrypt = require('bcryptjs');
 
-jest.mock('../models'); // Mock Sequelize model
+jest.mock('../models'); // Mock all models
 
 describe('User API Tests', () => {
     let user;
@@ -19,11 +19,11 @@ describe('User API Tests', () => {
             isPhoneVerified: true,
             isEmailVerified: true
         };
-        User.findOne.mockResolvedValue(null);
-        User.create.mockResolvedValue(user);
+        User.findOne.mockResolvedValue(null); // For registration: user does not exist
+        User.create.mockResolvedValue(user);  // For registration: return new user
     });
 
-    test(' Should register a user', async () => {
+    test('Should register a user', async () => {
         const res = await request(app)
             .post('/api/users/register')
             .send({
@@ -39,7 +39,7 @@ describe('User API Tests', () => {
         expect(res.body).toHaveProperty("message", "User registered. Verify phone & email.");
     });
 
-    test(' Should return error if passwords do not match', async () => {
+    test('Should return error if passwords do not match', async () => {
         const res = await request(app)
             .post('/api/users/register')
             .send({
